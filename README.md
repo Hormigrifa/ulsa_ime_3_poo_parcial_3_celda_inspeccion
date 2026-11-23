@@ -25,34 +25,38 @@ Escriban el comando exacto que usa el equipo para compilar y el comando para eje
 
 **¿Qué errores dio el compilador al compilar el repositorio base y qué significaba cada uno?**
 
-[Inserta aquí tu respuesta]
+Al compilar el repositorio base sin modificar contratos, el compilador marcó errores en CeldaInspeccion.cpp (principalmente dentro de iniciarTurno()), indicando que Dispositivo era un tipo incompleto o carecía de los métodos virtuales esperados (descripcion()), que no existía un destructor virtual polimórfico para usar dynamic_cast<Calibrable*>(d) sobre Dispositivo*, y que Calibrable no declaraba calibrar(). En C++, dynamic_cast exige que el tipo origen sea polimórfico (que tenga al menos una función virtual) para poder consultar su información de tipo en tiempo de ejecución.
 
 **¿Qué métodos agregaron a `Dispositivo`? ¿Cuáles son virtuales puros, cuáles son `const` y por qué el destructor es virtual?**
 
-[Inserta aquí tu respuesta]
+virtual bool inspeccionar(const Pieza& pieza) const = 0; — evalúa si la pieza cumple la regla del dispositivo (const porque inspeccionar no modifica el estado del dispositivo ni de la pieza).
+
+virtual std::string descripcion() const = 0; — devuelve el nombre/descripción del dispositivo para la salida del turno (const porque solo consulta información).
+Constructor / ID: manejo del identificador del dispositivo (por ejemplo, id() const o constructor protegido/público según el diseño acordado).
+
+Destructor virtual: virtual ~Dispositivo() = default; — es fundamental que sea virtual para que, si en algún momento se destruye un objeto derivado a través de un puntero Dispositivo*, se invoque primero el destructor de la clase derivada y luego el de Dispositivo, evitando comportamiento indefinido o fugas de recursos.
 
 **¿Qué agregaron a `Calibrable` y por qué no tiene atributos?**
 
-[Inserta aquí tu respuesta]
+Se agregó el método virtual puro virtual bool calibrar() = 0; (y destructor virtual virtual ~Calibrable() = default;). Calibrable funciona como una interfaz que representa únicamente una capacidad (poder calibrarse), no un estado común compartido por todos los objetos calibrables. Cada clase concreta (Bascula, CalibradorLaser, o futuras clases calibrables) decide cómo almacena y reinicia su propio desfase (desfase_ = 0.0), manteniendo la interfaz limpia y desacoplada.
 
 ## 4. Cálculo a mano del reporte
 
 Turno de 12 piezas, con la celda ya calibrada. Escriban `ACEPTA` o `RECHAZA` por dispositivo. La columna D-01 solo la llena el equipo de seis.
 
-| Pieza | B-01 | L-01 | V-01 | T-01 | D-01 | Resultado |
-| --- | --- | --- | --- | --- | --- | --- |
-| P-01 | | | | | | |
-| P-02 | | | | | | |
-| P-03 | | | | | | |
-| P-04 | | | | | | |
-| P-05 | | | | | | |
-| P-06 | | | | | | |
-| P-07 | | | | | | |
-| P-08 | | | | | | |
-| P-09 | | | | | | |
-| P-10 | | | | | | |
-| P-11 | | | | | | |
-| P-12 | | | | | | |
+Pieza	B-01	L-01	V-01	T-01	D-01	Resultado
+P-01	ACEPTA	ACEPTA	ACEPTA	ACEPTA	ACEPTA	ACEPTADA
+P-02	ACEPTA	ACEPTA	ACEPTA	ACEPTA	ACEPTA	ACEPTADA
+P-03	RECHAZA	ACEPTA	ACEPTA	ACEPTA	ACEPTA	RECHAZADA
+P-04	ACEPTA	ACEPTA	ACEPTA	ACEPTA	ACEPTA	ACEPTADA
+P-05	ACEPTA	RECHAZA	ACEPTA	ACEPTA	ACEPTA	RECHAZADA
+P-06	ACEPTA	ACEPTA	RECHAZA	ACEPTA	ACEPTA	RECHAZADA
+P-07	ACEPTA	ACEPTA	ACEPTA	RECHAZA	ACEPTA	RECHAZADA
+P-08	RECHAZA	RECHAZA	RECHAZA	ACEPTA	ACEPTA	RECHAZADA
+P-09	ACEPTA	ACEPTA	ACEPTA	ACEPTA	RECHAZA	ACEPTADA (equipo de 5) / RECHAZADA (equipo de 6)
+P-10	ACEPTA	ACEPTA	ACEPTA	ACEPTA	RECHAZA	ACEPTADA (equipo de 5) / RECHAZADA (equipo de 6)
+P-11	ACEPTA	ACEPTA	ACEPTA	RECHAZA	ACEPTA	RECHAZADA
+P-12	ACEPTA	ACEPTA	ACEPTA	ACEPTA
 
 **Reporte esperado (inspeccionadas, aceptadas, rechazadas y rechazos por dispositivo):**
 

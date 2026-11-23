@@ -10,14 +10,22 @@ namespace calidad {
 
 class CeldaInspeccion {
 private:
-    std::vector<Dispositivo*> dispositivos_;  // agregación: la celda no es dueña
-    ReporteTurno reporte_;                    // composición: vive y muere con la celda
+    std::vector<Dispositivo*> dispositivos_; // agregación
+    ReporteTurno reporte_;                   // composición
 
 public:
-    void agregarDispositivo(Dispositivo* d);
+    void agregarDispositivo(
+        Dispositivo* d
+    );
+
     void iniciarTurno();
-    bool procesar(const Pieza& pieza);
-    const ReporteTurno& reporte() const;
+
+    bool procesar(
+        const Pieza& pieza
+    );
+
+    const ReporteTurno&
+    reporte() const;
 };
 
-}  // namespace calidad
+} // namespace calidad

@@ -1,0 +1,30 @@
+#include "Bascula.h"
+
+namespace calidad {
+
+Bascula::Bascula(const std::string& id)
+    : Dispositivo(id),
+      desfase_(0.4) {
+}
+
+bool Bascula::inspeccionar(
+    const Pieza& pieza
+) const {
+
+    double pesoMedido =
+        pieza.peso() + desfase_;
+
+    return pesoMedido >= 10.0 &&
+           pesoMedido <= 15.0;
+}
+
+std::string Bascula::descripcion() const {
+    return "Bascula";
+}
+
+bool Bascula::calibrar() {
+    desfase_ = 0.0;
+    return true;
+}
+
+}
