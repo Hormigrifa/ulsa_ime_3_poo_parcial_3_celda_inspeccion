@@ -8,7 +8,7 @@ La guía completa del proyecto está en [PROYECTO.md](PROYECTO.md). Léanla ante
 
 | Integrante | Matrícula | Nombre | Usuario de GitHub | Clase |
 | --- | --- | --- | --- | --- |
-| 1 | | | | |
+| 1 |25173 |Cesar Leonardo Garrido |clgarridog | |
 | 2 | | | | |
 | 3 | | | | |
 | 4 | | | | |
@@ -19,13 +19,17 @@ La guía completa del proyecto está en [PROYECTO.md](PROYECTO.md). Léanla ante
 
 Escriban el comando exacto que usa el equipo para compilar y el comando para ejecutar.
 
-[Inserta aquí tu respuesta]
+g++ -Wall -Wextra -std=c++17 -Iinclude src/*.cpp -o celda
+.\celda.exe
 
 ## 3. Contrato de `Dispositivo` y `Calibrable`
 
 **¿Qué errores dio el compilador al compilar el repositorio base y qué significaba cada uno?**
 
-Al compilar el repositorio base sin modificar contratos, el compilador marcó errores en CeldaInspeccion.cpp (principalmente dentro de iniciarTurno()), indicando que Dispositivo era un tipo incompleto o carecía de los métodos virtuales esperados (descripcion()), que no existía un destructor virtual polimórfico para usar dynamic_cast<Calibrable*>(d) sobre Dispositivo*, y que Calibrable no declaraba calibrar(). En C++, dynamic_cast exige que el tipo origen sea polimórfico (que tenga al menos una función virtual) para poder consultar su información de tipo en tiempo de ejecución.
+A- Error en dynamic_cast: la clase Dispositivo no era polimórfica porque no tenía métodos virtuales.
+- Métodos no declarados: las interfaces estaban incompletas y no tenían todos los métodos necesarios para realizar la calibración y la inspección.
+- Contratos incompletos: la celda no podía utilizar correctamente las capacidades de los dispositivos hasta completar sus clases base.
+Estos problemas se solucionan declarando los métodos correspondientes y utilizando funciones virtuales para implementar el polimorfismo.    
 
 **¿Qué métodos agregaron a `Dispositivo`? ¿Cuáles son virtuales puros, cuáles son `const` y por qué el destructor es virtual?**
 
@@ -64,7 +68,15 @@ P-12	ACEPTA	ACEPTA	ACEPTA	ACEPTA
 
 **¿Coincide con lo que imprime el programa? Si no coincidió al primer intento, ¿qué encontraron y cómo lo corrigieron?**
 
-[Inserta aquí tu respuesta]
+=== Reporte de turno ===
+Inspeccionadas: 12
+Aceptadas: 6
+Rechazadas: 6
+Rechazos por dispositivo:
+B-01: 2
+L-01: 2
+T-01: 2
+V-01: 2
 
 ## 5. Diagrama de clases
 
